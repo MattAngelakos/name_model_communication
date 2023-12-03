@@ -51,9 +51,9 @@ class ModelCheckpointSaverCallback(Callback):
         nr_epochs_trained = epoch + 1
         nr_non_saved_epochs = nr_epochs_trained - self.last_saved_epoch
         if nr_non_saved_epochs >= self.nr_epochs_to_save:
-            self.logger.info('Saving model after {} epochs.'.format(nr_epochs_trained))
+            #self.logger.info('Saving model after {} epochs.'.format(nr_epochs_trained))
             self.model_wrapper.save()
-            self.logger.info('Done saving model.')
+            #self.logger.info('Done saving model.')
             self.last_saved_epoch = nr_epochs_trained
 
 
@@ -98,10 +98,12 @@ class ModelTrainingProgressLoggerCallback(MultiBatchCallback):
             self.config.NUM_BATCHES_TO_LOG_PROGRESS, average_logs=True)
 
     def on_train_begin(self, logs=None):
-        self.config.log('Starting training...')
+        #self.config.log('Starting training...')
+        pass
 
     def on_epoch_end(self, epoch, logs=None):
-        self.config.log('Completed epoch #{}: {}'.format(epoch + 1, logs))
+        #self.config.log('Completed epoch #{}: {}'.format(epoch + 1, logs))
+        pass
 
     def on_multi_batch_end(self, batch, logs, multi_batch_elapsed):
         nr_samples_in_multi_batch = self.config.TRAIN_BATCH_SIZE * \
@@ -115,7 +117,7 @@ class ModelTrainingProgressLoggerCallback(MultiBatchCallback):
         remained_samples = remained_batches * self.config.TRAIN_BATCH_SIZE
         remained_time_sec = remained_samples / self.avg_throughput
 
-        self.config.log(
+        """ self.config.log(
             'Train: during epoch #{epoch} batch {batch}/{tot_batches} ({batch_precision}%) -- '
             'throughput (#samples/sec): {throughput} -- epoch ETA: {epoch_ETA} -- loss: {loss:.4f}'.format(
                 epoch=self.training_status.nr_epochs_trained + 1,
@@ -124,4 +126,4 @@ class ModelTrainingProgressLoggerCallback(MultiBatchCallback):
                 tot_batches=self.config.train_steps_per_epoch,
                 throughput=int(throughput),
                 epoch_ETA=str(datetime.timedelta(seconds=int(remained_time_sec))),
-                loss=logs['loss']))
+                loss=logs['loss'])) """

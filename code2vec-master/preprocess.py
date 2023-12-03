@@ -65,12 +65,12 @@ def process_file(file_path, data_file_role, dataset_name, word_to_count, path_to
                 outfile.write(target_name + ' ' + " ".join(contexts) + csv_padding + '\n')
                 total += 1
 
-    print('File: ' + file_path)
+    """ print('File: ' + file_path)
     print('Average total contexts: ' + str(float(sum_total) / total))
     print('Average final (after sampling) contexts: ' + str(float(sum_sampled) / total))
     print('Total examples: ' + str(total))
     print('Empty examples: ' + str(empty))
-    print('Max number of contexts per word: ' + str(max_unfiltered))
+    print('Max number of contexts per word: ' + str(max_unfiltered)) """
     return total
 
 

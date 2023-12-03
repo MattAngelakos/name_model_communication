@@ -17,7 +17,7 @@ class InteractivePredictor:
 
     def predict(self):
         input_filename = 'code2vec/code2vec-master/Input.java'
-        print('Starting interactive prediction...')
+        #print('Starting interactive prediction...')
         try:
             predict_lines, hash_to_string_dict = self.path_extractor.extract_paths(input_filename)
         except ValueError as e:

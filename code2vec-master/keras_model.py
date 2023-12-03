@@ -175,7 +175,7 @@ class Code2VecModel(Code2VecModelBase):
             verbose=self.config.VERBOSE_MODE,
             callbacks=self._create_train_callbacks())
 
-        self.log(training_history)
+        #self.log(training_history)
 
     def evaluate(self) -> Optional[ModelEvaluationResults]:
         val_data_input_reader = self._create_data_reader(estimator_action=EstimatorAction.Evaluate)
@@ -262,11 +262,11 @@ class Code2VecModel(Code2VecModelBase):
                     model_weights_path=self.config.model_weights_load_path))
 
         if use_full_model:
-            self.log('Loading entire model from path `{}`.'.format(self.config.entire_model_load_path))
+            #self.log('Loading entire model from path `{}`.'.format(self.config.entire_model_load_path))
             latest_checkpoint = tf.train.latest_checkpoint(self.config.entire_model_load_path)
             if latest_checkpoint is None:
                 raise ValueError("Failed to load model: Model latest checkpoint is not found.")
-            self.log('Loading latest checkpoint `{}`.'.format(latest_checkpoint))
+            #self.log('Loading latest checkpoint `{}`.'.format(latest_checkpoint))
             status = self._get_checkpoint().restore(latest_checkpoint)
             status.initialize_or_restore()
             # FIXME: are we sure we have to re-compile here? I turned it off to save the optimizer state
@@ -274,7 +274,7 @@ class Code2VecModel(Code2VecModelBase):
             self.training_status.nr_epochs_trained = int(latest_checkpoint.split('-')[-1])
         else:
             # load the "released" model (only the weights).
-            self.log('Loading model weights from path `{}`.'.format(self.config.model_weights_load_path))
+            #self.log('Loading model weights from path `{}`.'.format(self.config.model_weights_load_path))
             self.keras_train_model.load_weights(self.config.model_weights_load_path)
 
         self.keras_train_model.summary(print_fn=self.log)
@@ -317,7 +317,7 @@ class Code2VecModel(Code2VecModelBase):
 
     def _create_lookup_tables(self):
         PathContextReader.create_needed_vocabs_lookup_tables(self.vocabs)
-        self.log('Lookup tables created.')
+        #self.log('Lookup tables created.')
 
     def _initialize(self):
         self._create_lookup_tables()
@@ -346,10 +346,11 @@ class ModelEvaluationCallback(MultiBatchCallback):
 
     def perform_evaluation(self):
         if self.avg_eval_duration is None:
-            self.code2vec_model.log('Evaluating...')
+            #self.code2vec_model.log('Evaluating...')
+            pass
         else:
-            self.code2vec_model.log('Evaluating... (takes ~{})'.format(
-                str(datetime.timedelta(seconds=int(self.avg_eval_duration)))))
+            """self.code2vec_model.log('Evaluating... (takes ~{})'.format(
+                str(datetime.timedelta(seconds=int(self.avg_eval_duration))))) """
         eval_start_time = time.time()
         evaluation_results = self.code2vec_model.evaluate()
         eval_duration = time.time() - eval_start_time
@@ -357,17 +358,17 @@ class ModelEvaluationCallback(MultiBatchCallback):
             self.avg_eval_duration = eval_duration
         else:
             self.avg_eval_duration = eval_duration * 0.5 + self.avg_eval_duration * 0.5
-        self.code2vec_model.log('Done evaluating (took {}). Evaluation results:'.format(
-            str(datetime.timedelta(seconds=int(eval_duration)))))
+        """ self.code2vec_model.log('Done evaluating (took {}). Evaluation results:'.format(
+            str(datetime.timedelta(seconds=int(eval_duration))))) """
 
-        self.code2vec_model.log(
+        """ self.code2vec_model.log(
             '    loss: {loss:.4f}, f1: {f1:.4f}, recall: {recall:.4f}, precision: {precision:.4f}'.format(
                 loss=evaluation_results.loss, f1=evaluation_results.subtoken_f1,
                 recall=evaluation_results.subtoken_recall, precision=evaluation_results.subtoken_precision))
         top_k_acc_formated = ['top{}: {:.4f}'.format(i, acc) for i, acc in enumerate(evaluation_results.topk_acc, start=1)]
         for top_k_acc_chunk in common.chunks(top_k_acc_formated, 5):
             self.code2vec_model.log('    ' + (', '.join(top_k_acc_chunk)))
-
+ """
 
 class _KerasModelInputTensorsFormer(ModelInputTensorsFormer):
     """
