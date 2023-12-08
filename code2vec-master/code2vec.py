@@ -20,7 +20,6 @@ if __name__ == '__main__':
     data = sock.recv(1024)
     config = Config(set_defaults=True, load_from_args=True, verify=True)
     model = load_model_dynamically(config)
-    config.log('Done creating code2vec model')
     if config.PREDICT:
         predictor = InteractivePredictor(config, model)
         data = predictor.predict()
